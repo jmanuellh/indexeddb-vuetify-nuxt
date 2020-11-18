@@ -98,13 +98,18 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Bienvenido',
           to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'Dispositivos personales',
+          to: '/dispositivos-personales'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Dispositivos clientes',
+          to: '/dispositivos-clientes'
         }
       ],
       miniVariant: false,
