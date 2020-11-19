@@ -1,7 +1,7 @@
 export const state = () => ({
   job_ids: [],
   dispositivos_personales: [],
-  dispositivos_clientes: []
+  dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}]
 })
 
 export const mutations = {
@@ -16,11 +16,11 @@ export const mutations = {
   },
   REMOVE_DISPOSITIVO_PERSONAL(store, id_dispositivo_personal) {
     // state.dispositivos_personales.splice(state.dispositivos_personales.map(d => d.id).indexOf(id_dispositivo_personal))
-    state.dispositivos_personales = state.dispositivos_personales.filter(d => return d.id != id_dispositivo_personal)
+    state.dispositivos_personales = state.dispositivos_personales.filter(d => d.id != id_dispositivo_personal)
   },
   REMOVE_DISPOSITIVO_CLIENTE(store, id_dispositivo_cliente) {
     // state.dispositivos_clientes.splice(state.dispositivos_clientes.map(d => d.id).indexOf(id_dispositivo_cliente))
-    state.dispositivos_clientes = state.dispositivos_clientes.filter(d => return d.id != id_dispositivo_cliente)
+    state.dispositivos_clientes = state.dispositivos_clientes.filter(d => d.id != id_dispositivo_cliente)
   },
   UPDATE_DISPOSITIVO_PERSONAL(store, dispositivo_personal) {
     let indexDispositivo = state.dispositivos_personales.map(d => d.id).indexOf(dispositivo_personal.id)

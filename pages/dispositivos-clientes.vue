@@ -6,7 +6,3 @@
       tabla-dispositivos-clientes
 </template>
 
-<script>
-export default {
-}
-</script>
