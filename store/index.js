@@ -1,7 +1,7 @@
 export const state = () => ({
   job_ids: [],
-  dispositivos_personales: [{id:1, nombre: 'Manuel', mac: 12345678}],
-  dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}]
+  dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}, {id:2, nombre: 'Jose', mac: 12345678}],
+  dispositivos_personales: [{id:1, nombre: 'Manuel', mac: 12345678}]
 })
 
 export const mutations = {

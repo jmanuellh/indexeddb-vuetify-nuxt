@@ -3,8 +3,8 @@
     div
       h1 Dispositivos clientes
     div
-      agregar-dispositivo-clientes
+      AgregarDispositivoCliente
     div
-      tabla-dispositivos-clientes
+      TablaDispositivosClientes
 </template>
 

@@ -3,10 +3,12 @@
     :headers="headers"
     :items="getDispositivosPersonales"
   )
+    template( v-slot:item.acciones="{ item }" )
+      v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
@@ -17,12 +19,13 @@ export default {
       headers: [
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
-        {text: 'MAC', value: 'mac'}
+        {text: 'MAC', value: 'mac'},
+        {text: 'Acciones', value: 'acciones'}
       ]
     }
   },
-  mounted() {
-    console.log(this.getDispositivosPersonales)
+  methods: {
+    ...mapActions(['removeDispositivoPersonal'])
   }
 }
 </script>

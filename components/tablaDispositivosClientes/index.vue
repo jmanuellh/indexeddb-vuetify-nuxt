@@ -1,12 +1,15 @@
 <template lang="pug">
-  v-data-table(
-    :headers="headers"
-    :items="getDispositivosClientes"
-  )
+  div
+    v-data-table(
+      :headers="headers"
+      :items="getDispositivosClientes"
+    )
+      template( v-slot:item.acciones="{ item }" )
+        v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
@@ -14,15 +17,17 @@ export default {
   },
   data() {
     return {
+      numero: 4,
       headers: [
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
-        {text: 'MAC', value: 'mac'}
+        {text: 'MAC', value: 'mac'},
+        {text: 'Acciones', value: 'acciones'}
       ]
     }
   },
-  mounted() {
-    console.log(this.getDispositivosClientes)
+  methods: {
+    ...mapActions(['removeDispositivoCliente'])
   }
 }
 </script>

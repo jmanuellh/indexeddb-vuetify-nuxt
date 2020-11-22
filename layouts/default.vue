@@ -103,13 +103,13 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Dispositivos personales',
-          to: '/dispositivos-personales'
+          title: 'Dispositivos clientes',
+          to: '/dispositivos-clientes'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Dispositivos clientes',
-          to: '/dispositivos-clientes'
+          title: 'Dispositivos personales',
+          to: '/dispositivos-personales'
         }
       ],
       miniVariant: false,

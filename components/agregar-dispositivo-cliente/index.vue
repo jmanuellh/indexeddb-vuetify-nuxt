@@ -20,9 +20,6 @@ export default {
     }
   },
   methods: {
-  //   addDispositivoPersonal() {
-  //     console.log(this.nuevoDispositivo)
-  //   }
     ...mapActions(['addDispositivoCliente'])
   }
 }

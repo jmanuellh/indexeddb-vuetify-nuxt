@@ -3,7 +3,7 @@
     div
       h1 Dispositivos personales
     div
-      agregar-dispositivo-personal
+      AgregarDispositivoPersonal
     div
-      tabla-dispositivos-personales
+      TablaDispositivosPersonales
 </template>
