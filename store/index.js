@@ -40,7 +40,6 @@ export const actions = {
     commit('ADD_DISPOSITIVO_CLIENTE', dispositivo_cliente)
   },
   addDispositivoPersonal({commit}, dispositivo_personal) {
-    // console.log(dispositivo_personal)
     commit('ADD_DISPOSITIVO_PERSONAL', dispositivo_personal)
   },
   removeDispositivoPersonal({commit}, id_dispositivo_personal) {
