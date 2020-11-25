@@ -1,11 +1,15 @@
 <template lang="pug">
   div
-    v-data-table(
-      :headers="headers"
-      :items="getDispositivosClientes"
-    )
-      template( v-slot:item.acciones="{ item }" )
-        v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
+    div
+      v-btn( @click="abrirDBDispositivosClientes" ) Abrir DB
+      v-btn( @click="obtenerDb" ) Obtener DB
+    div
+      v-data-table(
+        :headers="headers"
+        :items="getDispositivosClientes"
+      )
+        template( v-slot:item.acciones="{ item }" )
+          v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
 </template>
 
 <script>
@@ -13,7 +17,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['getDispositivosClientes'])
+    ...mapGetters(['getDispositivosClientes', 'getDb'])
   },
   data() {
     return {
@@ -26,8 +30,16 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.abrirDBDispositivosClientes().then(() => {
+      console.log('mounted getDb: ', this.getDb)
+    })
+  },
   methods: {
-    ...mapActions(['removeDispositivoCliente'])
+    ...mapActions(['removeDispositivoCliente', 'abrirDBDispositivosClientes']),
+    obtenerDb() {
+      console.log(this.getDb)
+    }
   }
 }
 </script>
