@@ -1,9 +1,6 @@
 <template lang="pug">
   div
     div
-      v-btn( @click="abrirDBDispositivosClientes" ) Abrir DB
-      v-btn( @click="obtenerDb" ) Obtener DB
-    div
       v-data-table(
         :headers="headers"
         :items="getDispositivosClientes"
@@ -17,11 +14,10 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['getDispositivosClientes', 'getDb'])
+    ...mapGetters(['getDispositivosClientes'])
   },
   data() {
     return {
-      numero: 4,
       headers: [
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
@@ -30,16 +26,13 @@ export default {
       ]
     }
   },
-  mounted() {
+  created() {
     this.abrirDBDispositivosClientes().then(() => {
-      console.log('mounted getDb: ', this.getDb)
+      this.pushDispositivosClientes()
     })
   },
   methods: {
-    ...mapActions(['removeDispositivoCliente', 'abrirDBDispositivosClientes']),
-    obtenerDb() {
-      console.log(this.getDb)
-    }
+    ...mapActions(['removeDispositivoCliente', 'abrirDBDispositivosClientes', 'pushDispositivosClientes'])
   }
 }
 </script>

@@ -11,7 +11,9 @@ export const mutations = {
     state.job_ids = job_ids
   },
   ADD_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
-    state.dispositivos_clientes.
+    dispositivos_clientes.map(dispositivo => {
+      state.dispositivos_clientes.push(dispositivo)
+    })
   },
   ADD_DISPOSITIVO_CLIENTE(state, dispositivo_cliente) {
     state.dispositivos_clientes.push(dispositivo_cliente)
@@ -44,9 +46,9 @@ export const actions = {
   storeJobIds({commit}, job_ids) {
     commit('STORE_JOB_IDS', job_ids)
   },
-  addDispositivosClientes({commit}, dispositivos_clientes) {
-    commit('ADD_DISPOSITIVOS_CLIENTES', dispositivos_clientes)
-  },
+  // addDispositivosClientes({commit}, dispositivos_clientes) {
+  //   commit('ADD_DISPOSITIVOS_CLIENTES', dispositivos_clientes)
+  // },
   addDispositivoCliente({commit}, dispositivo_cliente) {
     commit('ADD_DISPOSITIVO_CLIENTE', dispositivo_cliente)
   },
@@ -65,21 +67,22 @@ export const actions = {
   updateDispositivoPersonal({commit}, dispositivo_personal) {
     commit('UPDATE_DISPOSITIVO_PERSONAL', dispositivo_personal)
   },
-  abrirDBDispositivosClientes({commit}) {
+  abrirDBDispositivosClientes({commit, getters}) {
 		return new Promise((resolve, reject) => {
-
-			if(this.getDb) {
-        return resolve(this.getDb)
+			if(this.getDbDispositivosClientes) {
+        console.log("if true: ", this.getDbDispositivosClientes)
+        return resolve(this.getDbDispositivosClientes)
       }
-			let request = window.indexedDB.open("dispositivos-clientes", 1);
-			
+
+			let request = indexedDB.open("dispositivos-clientes", 1);
+      console.log("request: ", request)
+      
 			request.onerror = e => {
 				reject('Error', e);
 			};
       
 			request.onsuccess = e => {
-        commit('ABRIR_DB', e.target.result)
-				resolve(this.getDb);
+        commit('ABRIR_DB', e.target.result);
 			};
 			
 			request.onupgradeneeded = e => {
@@ -87,6 +90,14 @@ export const actions = {
 				db.createObjectStore("dispositivos-clientes", { autoIncrement: true, keyPath:'id' });
 			};
 		});
+  },
+  pushDispositivosClientes({commit, getters}) {
+    let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'],'readonly').objectStore('dispositivos-clientes')
+
+    objectStore.getAll().onsuccess = function(event) {
+      commit('ADD_DISPOSITIVOS_CLIENTES', event.target.result)
+    };
+    // return state.dispositivos_clientes
   }
 }
 
@@ -95,38 +106,12 @@ export const getters = {
     return state.job_ids
   },
   getDispositivosClientes(state) {
-    return new Promise((resolve, reject) => {
-
-      let trans = this.db.transaction(['dispositivos-clientes'],'readonly');
-
-      trans.oncomplete = e => {
-        resolve(state.dispositivos_clientes);
-      };
-      
-      let store = trans.objectStore('dispositivos-clientes');
-      let cats = [];
-
-      objectStore.getAll().onsuccess = function(event) {
-        this.addDispositivosClientes(event.target.result)
-      };
-      
-      store.openCursor().onsuccess = e => {
-        let cursor = e.target.result;
-        if (cursor) {
-          cats.push(cursor.value)
-          cursor.continue();
-        }
-      };
-  
-    
-    }
-
-    // return state.dispositivos_clientes
+    return state.dispositivos_clientes
   },
   getDispositivosPersonales(state) {
     return state.dispositivos_personales
   },
-  getDb(state) {
+  getDbDispositivosClientes(state) {
     return state.dbDispositivosClientes
   }
 }
