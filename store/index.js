@@ -1,3 +1,5 @@
+import database from '~/api/database';
+
 export const state = () => ({
   job_ids: [],
   dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}, {id:2, nombre: 'Jose', mac: 12345678}],
@@ -16,7 +18,19 @@ export const mutations = {
     })
   },
   ADD_DISPOSITIVO_CLIENTE(state, dispositivo_cliente) {
-    state.dispositivos_clientes.push(dispositivo_cliente)
+		// return new Promise((resolve, reject) => {
+    //   let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'],'readonly').objectStore('dispositivos-clientes')
+      
+    //   objectStore.add(dispositivo_cliente).onsuccess = function() {
+    //     resolve()
+    //   };
+
+		// 	objectStore.onerror = e => {
+		// 		reject('Error:', e);
+		// 	};
+    // });
+    // console.log(dispositivo_cliente)
+    // state.dispositivos_clientes.push(dispositivo_cliente)
   },
   ADD_DISPOSITIVO_PERSONAL(state, dispositivo_personal) {
     state.dispositivos_personales.push(dispositivo_personal)
@@ -39,6 +53,13 @@ export const mutations = {
   },
   ABRIR_DB(state, db) {
     state.dbDispositivosClientes = db
+    console.log('state.dbDispositivosClientes:', state.dbDispositivosClientes)
+  },
+  LLENAR_DB(state, db) {
+    state.db = db
+  },
+  ADD_DISPOSITIVO() {
+    state.add
   }
 }
 
@@ -49,8 +70,21 @@ export const actions = {
   // addDispositivosClientes({commit}, dispositivos_clientes) {
   //   commit('ADD_DISPOSITIVOS_CLIENTES', dispositivos_clientes)
   // },
-  addDispositivoCliente({commit}, dispositivo_cliente) {
-    commit('ADD_DISPOSITIVO_CLIENTE', dispositivo_cliente)
+  addDispositivoCliente({commit, getters}, dispositivo_cliente) {
+		return new Promise((resolve, reject) => {
+      let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'], 'readwrite').objectStore('dispositivos-clientes')
+      
+      // console.log('dispositivo cliente:', dispositivo_cliente)
+
+      objectStore.add(dispositivo_cliente).onsuccess = function(event) {
+        commit('ADD_DISPOSITIVO_CLIENTE', Object.assign({id: event.target.result}, dispositivo_cliente))
+        resolve()
+      };
+
+			objectStore.onerror = e => {
+				reject('Error:', e);
+			};
+		});
   },
   addDispositivoPersonal({commit}, dispositivo_personal) {
     commit('ADD_DISPOSITIVO_PERSONAL', dispositivo_personal)
@@ -67,29 +101,23 @@ export const actions = {
   updateDispositivoPersonal({commit}, dispositivo_personal) {
     commit('UPDATE_DISPOSITIVO_PERSONAL', dispositivo_personal)
   },
-  abrirDBDispositivosClientes({commit, getters}) {
-		return new Promise((resolve, reject) => {
-			if(this.getDbDispositivosClientes) {
-        console.log("if true: ", this.getDbDispositivosClientes)
-        return resolve(this.getDbDispositivosClientes)
-      }
+  abrirDBDispositivosClientes({commit, getters}, db) {
+		// return new Promise((resolve, reject) => {
+      // if(getters.getDbDispositivosClientes) {
+        // console.log(getters.getDbDispositivosClientes)
+    //     resolve()
 
-			let request = indexedDB.open("dispositivos-clientes", 1);
-      console.log("request: ", request)
-      
-			request.onerror = e => {
-				reject('Error', e);
-			};
-      
-			request.onsuccess = e => {
-        commit('ABRIR_DB', e.target.result);
-			};
-			
-			request.onupgradeneeded = e => {
-				let db = e.target.result;
-				db.createObjectStore("dispositivos-clientes", { autoIncrement: true, keyPath:'id' });
-			};
-		});
+    //   } else {
+        // const db = new Dexie('indexeddb-vuetify-nuxt');
+        // db.version(1).stores({
+        //   dispositivosClientes: '++id, nombre, mac'
+        // });
+        commit('ABRIR_DB', db);
+    //     console.log("entró a else")
+    //     resolve()
+
+    //   }
+		// });
   },
   pushDispositivosClientes({commit, getters}) {
     let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'],'readonly').objectStore('dispositivos-clientes')
@@ -98,6 +126,12 @@ export const actions = {
       commit('ADD_DISPOSITIVOS_CLIENTES', event.target.result)
     };
     // return state.dispositivos_clientes
+  },
+  llenarDB({commit}) {
+     commit('LLENAR_DB', database.getDB())
+  },
+  addDispositivo({}, dispositivo) {
+    commit('ADD_DISPOSITIVO', dispositivo)
   }
 }
 
@@ -111,7 +145,10 @@ export const getters = {
   getDispositivosPersonales(state) {
     return state.dispositivos_personales
   },
-  getDbDispositivosClientes(state) {
+  getDBDispositivosClientes(state) {
     return state.dbDispositivosClientes
+  },
+  getDB(state) {
+    return state.db
   }
 }
