@@ -1,32 +1,40 @@
 <template lang="pug">
   div
     div
-      v-form
-        v-text-field(
-          v-model="nuevoDispositivo.nombre"
-          label="Nombre"
-        )
-        v-text-field(
-          v-model="nuevoDispositivo.mac"
-          label="MAC"
-        )
-        v-btn(@click="addDispositivoCliente(nuevoDispositivo)" color="primary") Agregar dispositivo
+      v-btn( @click="obtenerDispositivosClientes()" ) getDispositivosClientes
     div
-      v-data-table(
-        :headers="headers"
-        :items="getDispositivosClientes"
-      )
-        template( v-slot:item.acciones="{ item }" )
-          v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
+      v-btn( @click="actTabla()" ) Actualizar tabla
+    div
+      v-btn( @click="mostrarDatosTabla" ) showDatosTabla
+    //- div
+    //-   v-form
+    //-     v-text-field(
+    //-       v-model="nuevoDispositivo.nombre"
+    //-       label="Nombre"
+    //-     )
+    //-     v-text-field(
+    //-       v-model="nuevoDispositivo.mac"
+    //-       label="MAC"
+    //-     )
+    //-     v-btn(@click="agregarDispositivo()" color="primary") Agregar dispositivo
+    //- div
+    //-   v-data-table(
+    //-     :headers="headers"
+    //-     items="[]"
+    //-   )
+    //-     template( v-slot:item.acciones="{ item }" )
+    //-       v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 // import { openDB } from 'idb';
+import Dexie from 'dexie';
+import database from '~/api/database';
 
 export default {
   computed: {
-    ...mapGetters(['getDispositivosClientes', 'getDBDispositivosClientes'])
+    ...mapGetters(['getDBDispositivosClientes', 'showDispositivosClientes'])
   },
   data() {
     return {
@@ -39,8 +47,8 @@ export default {
       ]
     }
   },
-  created() {
-    this.abrirDB()
+  mounted() {
+    this.cargarDB()
   },
   methods: {
     ...mapActions([
@@ -48,7 +56,12 @@ export default {
       'abrirDBDispositivosClientes',
       'pushDispositivosClientes',
       'addDispositivoCliente',
-      'getDB']),
+      'getDB',
+      'agregarDispositivoADB',
+      'addDispositivo',
+      'cargarDB',
+      'actualizarTabla',
+      'getDispositivosClientes']),
     abrirDB() {
       this.getDB()
 
@@ -64,6 +77,23 @@ export default {
       //   })
       //   this.abrirDBDispositivosClientes(db)
       // }
+    },
+    agregarDispositivo() {
+      this.addDispositivo(this.nuevoDispositivo)
+    },
+    mostrarDatosTabla() {
+      console.log(this.showDispositivosClientes)
+      // this.getDispositivosClientes.forEach(element => {
+      //   console.log('element:', element)
+      // });
+    },
+    actTabla() {
+      this.actualizarTabla()
+    },
+    obtenerDispositivosClientes() {
+      // console.log(database.getDBDexie())
+      // this.getDispositivosClientes(database.getDBDexie().dispositivosClientes)
+      this.getDispositivosClientes()
     }
   }
 }

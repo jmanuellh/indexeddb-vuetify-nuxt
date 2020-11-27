@@ -1,11 +1,13 @@
 import database from '~/api/database';
+import Dexie from 'dexie';
 
 export const state = () => ({
   job_ids: [],
   dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}, {id:2, nombre: 'Jose', mac: 12345678}],
   dispositivos_personales: [{id:1, nombre: 'Manuel', mac: 12345678}],
   dbDispositivosClientes: '',
-  dbDispositivosPersonales: ''
+  dbDispositivosPersonales: '',
+  db: ''
 })
 
 export const mutations = {
@@ -58,8 +60,17 @@ export const mutations = {
   LLENAR_DB(state, db) {
     state.db = db
   },
-  ADD_DISPOSITIVO() {
-    state.add
+  ADD_DISPOSITIVO(state, dispositivo) {
+    state.db.dispositivosClientes.put(dispositivo)
+  },
+  CARGAR_DB(state, db) {
+    state.db = db
+  },
+  ACTUALIZAR_TABLA(state, db) {
+    state.db = db
+  },
+  GET_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
+    state.dispositivos_clientes = dispositivos_clientes
   }
 }
 
@@ -130,17 +141,47 @@ export const actions = {
   llenarDB({commit}) {
      commit('LLENAR_DB', database.getDB())
   },
-  addDispositivo({}, dispositivo) {
+  addDispositivo({commit}, dispositivo) {
     commit('ADD_DISPOSITIVO', dispositivo)
+  },
+  cargarDB({commit, getters}) {
+    if(!getters.getDB) {
+      console.log("if getters.getDB", getters.getDB)
+      commit('CARGAR_DB', database.getDBDexie())
+      console.log("if despues getters.getDB", getters.getDB)
+    } else {
+      console.log("else getters.getDB", getters.getDB)
+    }
+  },
+  actualizarTabla({commit}) {
+    commit("ACTUALIZAR_TABLA", database.getDBDexie())
+  },
+  async getDispositivosClientes({commit, getters}) {
+      // if( typeof state.db.dispositivosClientes !== 'undefined' ) {
+          // const db = new Dexie('indexeddb-vuetify-nuxt')
+
+          // db.version(1).stores({ dispositivosClientes: '++id, nombre, mac' })
+
+          // const dispositivosClientes = state.db.dispositivosClientes
+          // console.log(getters.getDB)
+          // console.log(getters.getDB.dispositivosClientes.toCollection())
+          // const a = getters.getDB.dispositivosClientes.toCollection().clone()
+          // console.log(await getters.getDB.dispositivosClientes.toArray())
+          // console.log("getters.getDB:", getters.getDB)
+          // const a = await database.obtenerTodo(getters.getDB.dispositivosClientes)
+          // console.log(tabla)
+          commit('GET_DISPOSITIVOS_CLIENTES', await database.obtenerTodo())
+          // return []
+      // } else {
+      //   return []
+      //   // return state.dispositivos_clientes
+      // }
   }
 }
 
 export const getters = {
   getJobIds(state) {
     return state.job_ids
-  },
-  getDispositivosClientes(state) {
-    return state.dispositivos_clientes
   },
   getDispositivosPersonales(state) {
     return state.dispositivos_personales
@@ -150,5 +191,8 @@ export const getters = {
   },
   getDB(state) {
     return state.db
+  },
+  showDispositivosClientes(state) {
+    return state.dispositivos_clientes
   }
 }
