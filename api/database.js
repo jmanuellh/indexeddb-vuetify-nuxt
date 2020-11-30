@@ -13,9 +13,13 @@ export default {
     return this.db
   },
 
-  async obtenerTodo() {
+  async obtenerTodosDispositivosClientes() {
     this.instanciarDBDexie()
     return await this.db.dispositivosClientes.toArray()
+  },
+  async obtenerTodosDispositivosPersonales() {
+    this.instanciarDBDexie()
+    return await this.db.dispositivosPersonales.toArray()
   },
 
   async agregarDispositivoCliente(dispositivoCliente) {

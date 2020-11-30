@@ -2,7 +2,7 @@ import Database from '~/api/database';
 
 export const state = () => ({
   dispositivos_clientes: [],
-  dispositivos_personales: [{id:1, nombre: 'Manuel', mac: 12345678}],
+  dispositivos_personales: [],
   dbDispositivosClientes: '',
   dbDispositivosPersonales: ''
 })
@@ -10,6 +10,9 @@ export const state = () => ({
 export const mutations = {
   LLENAR_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
     state.dispositivos_clientes = dispositivos_clientes
+  },
+  LLENAR_DISPOSITIVOS_PERSONALES(state, dispositivosPersonales) {
+    state.dispositivos_personales = dispositivosPersonales
   }
 }
 
@@ -86,7 +89,10 @@ export const actions = {
     commit("ACTUALIZAR_TABLA", Database.getDBDexie())
   },
   async llenarDispositivosClientes({commit}) {
-    commit('LLENAR_DISPOSITIVOS_CLIENTES', await Database.obtenerTodo())
+    commit('LLENAR_DISPOSITIVOS_CLIENTES', await Database.obtenerTodosDispositivosClientes())
+  },
+  async llenarDispositivosPersonales({commit}) {
+    commit('LLENAR_DISPOSITIVOS_PERSONALES', await Database.obtenerTodosDispositivosPersonales())
   },
   agregarDispositivoCliente({ dispatch }, dispositivoCliente) {
     Database.agregarDispositivoCliente(dispositivoCliente).then(() => {
@@ -96,20 +102,8 @@ export const actions = {
 }
 
 export const getters = {
-  getJobIds(state) {
-    return state.job_ids
-  },
-  getDispositivosPersonales(state) {
+  obtenerDispositivosPersonales(state) {
     return state.dispositivos_personales
-  },
-  getDBDispositivosClientes(state) {
-    return state.dbDispositivosClientes
-  },
-  getDB(state) {
-    return state.db
-  },
-  showDispositivosClientes(state) {
-    return state.dispositivos_clientes
   },
   obtenerDispositivosClientes(state) {
     return state.dispositivos_clientes
