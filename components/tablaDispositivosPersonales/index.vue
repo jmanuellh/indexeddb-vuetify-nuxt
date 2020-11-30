@@ -1,10 +1,10 @@
 <template lang="pug">
   v-data-table(
     :headers="headers"
-    :items="getDispositivosPersonales"
+    :items="obtenerDispositivosPersonales"
   )
-    template( v-slot:item.acciones="{ item }" )
-      v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
+    //- template( v-slot:item.acciones="{ item }" )
+    //-   v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
 </template>
 
 <script>
@@ -12,7 +12,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['getDispositivosPersonales'])
+    ...mapGetters(['obtenerDispositivosPersonales'])
   },
   data() {
     return {
@@ -20,12 +20,15 @@ export default {
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
         {text: 'MAC', value: 'mac'},
-        {text: 'Acciones', value: 'acciones'}
+        // {text: 'Acciones', value: 'acciones'}
       ]
     }
   },
+  mounted() {
+    this.llenarDispositivosPersonales()
+  },
   methods: {
-    ...mapActions(['removeDispositivoPersonal'])
+    ...mapActions(['llenarDispositivosPersonales', 'removeDispositivoPersonal'])
   }
 }
 </script>
