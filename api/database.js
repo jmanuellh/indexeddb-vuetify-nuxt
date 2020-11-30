@@ -1,16 +1,25 @@
 import Dexie from 'dexie';
 
 export default {
-  getDBDexie() {
-    const db = new Dexie('indexeddb-vuetify-nuxt')
 
-    db.version(1).stores({ dispositivosClientes: '++id, nombre, mac' })
-    db.version(1).stores({ dispositivosPersonales: '++id, nombre, mac'})
-    return db
+  instanciarDBDexie() {
+    this.db = new Dexie('indexeddb-vuetify-nuxt')
+
+    this.db.version(1).stores({ dispositivosClientes: '++id, nombre, mac' })
+    this.db.version(1).stores({ dispositivosPersonales: '++id, nombre, mac'})
+  },
+  
+  getDBDexie() {
+    return this.db
   },
 
   async obtenerTodo() {
-    // let nuevaTabla = Dexie.deepClone(tabla)
-    return await this.getDBDexie().dispositivosClientes.toArray()
+    this.instanciarDBDexie()
+    return await this.db.dispositivosClientes.toArray()
+  },
+
+  async agregarDispositivoCliente(dispositivoCliente) {
+    this.instanciarDBDexie()
+    await this.db.dispositivosClientes.add(dispositivoCliente)
   }
 }

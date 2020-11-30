@@ -1,91 +1,21 @@
-import database from '~/api/database';
-import Dexie from 'dexie';
+import Database from '~/api/database';
 
 export const state = () => ({
-  job_ids: [],
-  dispositivos_clientes: [{id:1, nombre: 'Manuel', mac: 12345678}, {id:2, nombre: 'Jose', mac: 12345678}],
+  dispositivos_clientes: [],
   dispositivos_personales: [{id:1, nombre: 'Manuel', mac: 12345678}],
   dbDispositivosClientes: '',
-  dbDispositivosPersonales: '',
-  db: ''
+  dbDispositivosPersonales: ''
 })
 
 export const mutations = {
-  STORE_JOB_IDS(state, job_ids) {
-    state.job_ids = job_ids
-  },
-  ADD_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
-    dispositivos_clientes.map(dispositivo => {
-      state.dispositivos_clientes.push(dispositivo)
-    })
-  },
-  ADD_DISPOSITIVO_CLIENTE(state, dispositivo_cliente) {
-		// return new Promise((resolve, reject) => {
-    //   let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'],'readonly').objectStore('dispositivos-clientes')
-      
-    //   objectStore.add(dispositivo_cliente).onsuccess = function() {
-    //     resolve()
-    //   };
-
-		// 	objectStore.onerror = e => {
-		// 		reject('Error:', e);
-		// 	};
-    // });
-    // console.log(dispositivo_cliente)
-    // state.dispositivos_clientes.push(dispositivo_cliente)
-  },
-  ADD_DISPOSITIVO_PERSONAL(state, dispositivo_personal) {
-    state.dispositivos_personales.push(dispositivo_personal)
-  },
-  REMOVE_DISPOSITIVO_PERSONAL(state, id_dispositivo_personal) {
-    // state.dispositivos_personales.splice(state.dispositivos_personales.map(d => d.id).indexOf(id_dispositivo_personal))
-    state.dispositivos_personales = state.dispositivos_personales.filter(d => d.id != id_dispositivo_personal)
-  },
-  REMOVE_DISPOSITIVO_CLIENTE(state, id_dispositivo_cliente) {
-    // state.dispositivos_clientes.splice(state.dispositivos_clientes.map(d => d.id).indexOf(id_dispositivo_cliente))
-    state.dispositivos_clientes = state.dispositivos_clientes.filter(d => d.id != id_dispositivo_cliente)
-  },
-  UPDATE_DISPOSITIVO_PERSONAL(state, dispositivo_personal) {
-    let indexDispositivo = state.dispositivos_personales.map(d => d.id).indexOf(dispositivo_personal.id)
-    state.dispositivos_personales[indexDispositivo] = dispositivo_personal
-  },
-  UPDATE_DISPOSITIVO_CLIENTE(state, dispositivo_cliente) {
-    let indexDispositivo = state.dispositivos_clientes.map(d => d.id).indexOf(dispositivo_cliente.id)
-    state.dispositivos_clientes[indexDispositivo] = dispositivo_cliente
-  },
-  ABRIR_DB(state, db) {
-    state.dbDispositivosClientes = db
-    console.log('state.dbDispositivosClientes:', state.dbDispositivosClientes)
-  },
-  LLENAR_DB(state, db) {
-    state.db = db
-  },
-  ADD_DISPOSITIVO(state, dispositivo) {
-    state.db.dispositivosClientes.put(dispositivo)
-  },
-  CARGAR_DB(state, db) {
-    state.db = db
-  },
-  ACTUALIZAR_TABLA(state, db) {
-    state.db = db
-  },
-  GET_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
+  LLENAR_DISPOSITIVOS_CLIENTES(state, dispositivos_clientes) {
     state.dispositivos_clientes = dispositivos_clientes
   }
 }
 
 export const actions = {
-  storeJobIds({commit}, job_ids) {
-    commit('STORE_JOB_IDS', job_ids)
-  },
-  // addDispositivosClientes({commit}, dispositivos_clientes) {
-  //   commit('ADD_DISPOSITIVOS_CLIENTES', dispositivos_clientes)
-  // },
   addDispositivoCliente({commit, getters}, dispositivo_cliente) {
-		return new Promise((resolve, reject) => {
       let objectStore = getters.getDbDispositivosClientes.transaction(['dispositivos-clientes'], 'readwrite').objectStore('dispositivos-clientes')
-      
-      // console.log('dispositivo cliente:', dispositivo_cliente)
 
       objectStore.add(dispositivo_cliente).onsuccess = function(event) {
         commit('ADD_DISPOSITIVO_CLIENTE', Object.assign({id: event.target.result}, dispositivo_cliente))
@@ -95,7 +25,6 @@ export const actions = {
 			objectStore.onerror = e => {
 				reject('Error:', e);
 			};
-		});
   },
   addDispositivoPersonal({commit}, dispositivo_personal) {
     commit('ADD_DISPOSITIVO_PERSONAL', dispositivo_personal)
@@ -139,7 +68,7 @@ export const actions = {
     // return state.dispositivos_clientes
   },
   llenarDB({commit}) {
-     commit('LLENAR_DB', database.getDB())
+     commit('LLENAR_DB', Database.getDBDexie())
   },
   addDispositivo({commit}, dispositivo) {
     commit('ADD_DISPOSITIVO', dispositivo)
@@ -147,35 +76,22 @@ export const actions = {
   cargarDB({commit, getters}) {
     if(!getters.getDB) {
       console.log("if getters.getDB", getters.getDB)
-      commit('CARGAR_DB', database.getDBDexie())
+      commit('CARGAR_DB', Database.getDBDexie())
       console.log("if despues getters.getDB", getters.getDB)
     } else {
       console.log("else getters.getDB", getters.getDB)
     }
   },
   actualizarTabla({commit}) {
-    commit("ACTUALIZAR_TABLA", database.getDBDexie())
+    commit("ACTUALIZAR_TABLA", Database.getDBDexie())
   },
-  async getDispositivosClientes({commit, getters}) {
-      // if( typeof state.db.dispositivosClientes !== 'undefined' ) {
-          // const db = new Dexie('indexeddb-vuetify-nuxt')
-
-          // db.version(1).stores({ dispositivosClientes: '++id, nombre, mac' })
-
-          // const dispositivosClientes = state.db.dispositivosClientes
-          // console.log(getters.getDB)
-          // console.log(getters.getDB.dispositivosClientes.toCollection())
-          // const a = getters.getDB.dispositivosClientes.toCollection().clone()
-          // console.log(await getters.getDB.dispositivosClientes.toArray())
-          // console.log("getters.getDB:", getters.getDB)
-          // const a = await database.obtenerTodo(getters.getDB.dispositivosClientes)
-          // console.log(tabla)
-          commit('GET_DISPOSITIVOS_CLIENTES', await database.obtenerTodo())
-          // return []
-      // } else {
-      //   return []
-      //   // return state.dispositivos_clientes
-      // }
+  async llenarDispositivosClientes({commit}) {
+    commit('LLENAR_DISPOSITIVOS_CLIENTES', await Database.obtenerTodo())
+  },
+  agregarDispositivoCliente({ dispatch }, dispositivoCliente) {
+    Database.agregarDispositivoCliente(dispositivoCliente).then(() => {
+      dispatch('llenarDispositivosClientes')
+    })
   }
 }
 
@@ -193,6 +109,9 @@ export const getters = {
     return state.db
   },
   showDispositivosClientes(state) {
+    return state.dispositivos_clientes
+  },
+  obtenerDispositivosClientes(state) {
     return state.dispositivos_clientes
   }
 }
