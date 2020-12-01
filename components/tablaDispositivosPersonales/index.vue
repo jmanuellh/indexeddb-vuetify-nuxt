@@ -48,7 +48,7 @@ export default {
       'agregarDispositivoPersonal'
     ]),
     async agregandoDispositivoPersonal() {
-      await this.agregarDispositivoPersonal()
+      await this.agregarDispositivoPersonal(this.nuevoDispositivo)
       this.limpiarNuevoDispositivo()
     },
     limpiarNuevoDispositivo() {
