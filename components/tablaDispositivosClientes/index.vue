@@ -10,7 +10,7 @@
           v-model="nuevoDispositivo.mac"
           label="MAC"
         )
-        v-btn(@click="agregarDispositivoCliente(nuevoDispositivo)" color="primary") Agregar dispositivo
+        v-btn(@click="agregandoDispositivoCliente()" color="primary") Agregar dispositivo
     div
       v-data-table(
         :headers="headers"
@@ -48,7 +48,14 @@ export default {
     ...mapActions([
       'llenarDispositivosClientes',
       'agregarDispositivoCliente',
-      'removerDispositivoCliente'])
+      'removerDispositivoCliente']),
+    limpiarNuevoDispositivo() {
+      this.nuevoDispositivo = {}
+    },
+    async agregandoDispositivoCliente() {
+      await this.agregarDispositivoCliente(this.nuevoDispositivo)
+      this.limpiarNuevoDispositivo()
+    }
   }
 }
 </script>

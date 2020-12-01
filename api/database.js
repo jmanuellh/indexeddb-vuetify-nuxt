@@ -21,7 +21,6 @@ export default {
     this.instanciarDBDexie()
     return await this.db.dispositivosPersonales.toArray()
   },
-
   async agregarDispositivoCliente(dispositivoCliente) {
     this.instanciarDBDexie()
     await this.db.dispositivosClientes.add(dispositivoCliente)
