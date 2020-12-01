@@ -43,7 +43,12 @@ export const actions = {
     Database.agregarDispositivoCliente(dispositivoCliente).then(() => {
       dispatch('llenarDispositivosClientes')
     })
-  }
+  },
+  agregarDispositivoPersonal({ dispatch }, dispositivoPersonal) {
+    Database.agregarDispositivoPersonal(dispositivoPersonal).then(() => {
+      dispatch('llenarDispositivosPersonales')
+    })
+  },
 }
 
 export const getters = {

@@ -33,5 +33,9 @@ export default {
   async removerDispositivoPersonal(idDispositivoPersonal) {
     this.instanciarDBDexie()
     await this.db.dispositivosPersonales.delete(idDispositivoPersonal)
+  },
+  async agregarDispositivoPersonal(dispositivoPersonal) {
+    this.instanciarDBDexie()
+    await this.db.dispositivosPersonales.add(dispositivoPersonal)
   }
 }
