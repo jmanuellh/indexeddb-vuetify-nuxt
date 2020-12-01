@@ -25,5 +25,13 @@ export default {
   async agregarDispositivoCliente(dispositivoCliente) {
     this.instanciarDBDexie()
     await this.db.dispositivosClientes.add(dispositivoCliente)
+  },
+  async removerDispositivoCliente(idDispositivoCliente) {
+    this.instanciarDBDexie()
+    await this.db.dispositivosClientes.delete(idDispositivoCliente)
+  },
+  async removerDispositivoPersonal(idDispositivoPersonal) {
+    this.instanciarDBDexie()
+    await this.db.dispositivosPersonales.delete(idDispositivoPersonal)
   }
 }

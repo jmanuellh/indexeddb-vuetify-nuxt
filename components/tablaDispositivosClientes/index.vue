@@ -16,15 +16,13 @@
         :headers="headers"
         :items="obtenerDispositivosClientes"
       )
-        //- template( v-slot:item.acciones="{ item }" )
-        //-   v-btn( @click="removeDispositivoCliente(item.id)" ) Eliminar
+        template( v-slot:item.acciones="{ item }" )
+          v-btn( @click="removerDispositivoCliente(item.id)" ) Eliminar
           
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Dexie from 'dexie';
-import database from '~/api/database';
 
 export default {
   computed: {
@@ -39,7 +37,7 @@ export default {
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
         {text: 'MAC', value: 'mac'},
-        // {text: 'Acciones', value: 'acciones'}
+        {text: 'Acciones', value: 'acciones'}
       ]
     }
   },
@@ -49,7 +47,8 @@ export default {
   methods: {
     ...mapActions([
       'llenarDispositivosClientes',
-      'agregarDispositivoCliente'])
+      'agregarDispositivoCliente',
+      'removerDispositivoCliente'])
   }
 }
 </script>

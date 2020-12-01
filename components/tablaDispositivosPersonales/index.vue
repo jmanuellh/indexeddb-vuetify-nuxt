@@ -3,8 +3,8 @@
     :headers="headers"
     :items="obtenerDispositivosPersonales"
   )
-    //- template( v-slot:item.acciones="{ item }" )
-    //-   v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
+    template( v-slot:item.acciones="{ item }" )
+      v-btn( @click="removerDispositivoPersonal(item.id)" ) Eliminar
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export default {
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
         {text: 'MAC', value: 'mac'},
-        // {text: 'Acciones', value: 'acciones'}
+        {text: 'Acciones', value: 'acciones'}
       ]
     }
   },
@@ -28,7 +28,7 @@ export default {
     this.llenarDispositivosPersonales()
   },
   methods: {
-    ...mapActions(['llenarDispositivosPersonales', 'removeDispositivoPersonal'])
+    ...mapActions(['llenarDispositivosPersonales', 'removerDispositivoPersonal'])
   }
 }
 </script>
