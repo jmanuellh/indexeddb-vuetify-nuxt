@@ -1,10 +1,23 @@
 <template lang="pug">
-  v-data-table(
-    :headers="headers"
-    :items="obtenerDispositivosPersonales"
-  )
-    //- template( v-slot:item.acciones="{ item }" )
-    //-   v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
+  div
+    div
+      v-form
+        v-text-field(
+          v-model="nuevoDispositivo.nombre"
+          label="Nombre"
+        )
+        v-text-field(
+          v-model="nuevoDispositivo.mac"
+          label="MAC"
+        )
+        v-btn(@click="agregarDispositivoPersonal(nuevoDispositivo)" color="primary") Agregar dispositivo
+    div
+      v-data-table(
+        :headers="headers"
+        :items="obtenerDispositivosPersonales"
+      )
+        //- template( v-slot:item.acciones="{ item }" )
+        //-   v-btn( @click="removeDispositivoPersonal(item.id)" ) Eliminar
 </template>
 
 <script>
@@ -16,6 +29,7 @@ export default {
   },
   data() {
     return {
+      nuevoDispositivo: {},
       headers: [
         {text: 'Id', value: 'id'},
         {text: 'Nombre', value: 'nombre'},
@@ -28,7 +42,11 @@ export default {
     this.llenarDispositivosPersonales()
   },
   methods: {
-    ...mapActions(['llenarDispositivosPersonales', 'removeDispositivoPersonal'])
+    ...mapActions([
+      'llenarDispositivosPersonales',
+      'removeDispositivoPersonal',
+      'agregarDispositivoPersonal'
+    ])
   }
 }
 </script>
