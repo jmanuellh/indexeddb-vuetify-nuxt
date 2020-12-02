@@ -40,15 +40,29 @@ export const actions = {
     commit('LLENAR_DISPOSITIVOS_PERSONALES', await Database.obtenerTodosDispositivosPersonales())
   },
   agregarDispositivoCliente({ dispatch }, dispositivoCliente) {
-    Database.agregarDispositivoCliente(dispositivoCliente).then(() => {
-      dispatch('llenarDispositivosClientes')
-    })
+    if (Object.keys(dispositivoCliente).length) {
+      Database.agregarDispositivoCliente(dispositivoCliente).then(() => {
+        dispatch('llenarDispositivosClientes')
+      })
+    }
   },
   agregarDispositivoPersonal({ dispatch }, dispositivoPersonal) {
-    Database.agregarDispositivoPersonal(dispositivoPersonal).then(() => {
+    if (Object.keys(dispositivoPersonal).length) {
+      Database.agregarDispositivoPersonal(dispositivoPersonal).then(() => {
+        dispatch('llenarDispositivosPersonales')
+      }) 
+    }
+  },
+  editarDispositivoPersonal({dispatch}, dispositivoPersonal) {
+    Database.actualizarDispositivoPersonal(dispositivoPersonal).then(() => {
       dispatch('llenarDispositivosPersonales')
     })
   },
+  editarDispositivoCliente({dispatch}, dispositivo) {
+    Database.actualizarDispositivoCliente(dispositivo).then(() => {
+      dispatch("llenarDispositivosClientes")
+    })
+  }
 }
 
 export const getters = {

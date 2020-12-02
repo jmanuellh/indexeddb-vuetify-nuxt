@@ -10,13 +10,17 @@
           v-model="nuevoDispositivo.mac"
           label="MAC"
         )
-        v-btn(@click="agregandoDispositivoCliente()" color="primary") Agregar dispositivo
+        span(v-if="typeof nuevoDispositivo.id == 'undefined'" )
+          v-btn(@click="agregandoDispositivo(nuevoDispositivo)" color="primary") Agregar dispositivo
+        span(v-else)
+          v-btn(@click="editandoDispositivo()" color="warning") Actualizar dispositivo
     div
       v-data-table(
         :headers="headers"
         :items="obtenerDispositivosClientes"
       )
-        template( v-slot:item.acciones="{ item }" )
+        template( v-slot:item.acciones="{ item }" )        
+          v-btn( @click="nuevoDispositivo = Object.assign({}, item)" ) Editar
           v-btn( @click="removerDispositivoCliente(item.id)" ) Eliminar
           
 </template>
@@ -48,12 +52,18 @@ export default {
     ...mapActions([
       'llenarDispositivosClientes',
       'agregarDispositivoCliente',
-      'removerDispositivoCliente']),
+      'removerDispositivoCliente',
+      'editarDispositivoCliente'
+    ]),
     limpiarNuevoDispositivo() {
       this.nuevoDispositivo = {}
     },
-    async agregandoDispositivoCliente() {
+    async agregandoDispositivo() {
       await this.agregarDispositivoCliente(this.nuevoDispositivo)
+      this.limpiarNuevoDispositivo()
+    },
+    async editandoDispositivo() {
+      await this.editarDispositivoCliente(this.nuevoDispositivo)
       this.limpiarNuevoDispositivo()
     }
   }
