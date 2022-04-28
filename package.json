@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.3",
-    "dexie": "^3.0.3",
+    "dexie": "^3.2.2",
     "@nuxtjs/pwa": "^3.3.2",
     "core-js": "^3.8.1",
     "nuxt": "^2.14.9"
